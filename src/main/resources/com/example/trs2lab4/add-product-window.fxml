@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="190.0" prefWidth="258.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.trs2_lab2_desktop.controller.product.AddProductController">
+   <children>
+      <TextField fx:id="nameField" layoutX="85.0" layoutY="14.0" />
+      <TextField fx:id="priceField" layoutX="85.0" layoutY="47.0" />
+      <ComboBox fx:id="categorySelector" layoutX="85.0" layoutY="81.0" prefWidth="150.0" />
+      <ComboBox fx:id="manufacturerSelector" layoutX="85.0" layoutY="114.0" prefWidth="150.0" />
+      <Button layoutX="85.0" layoutY="148.0" onAction="#addProduct" mnemonicParsing="false" text="Add" />
+      <Label layoutX="39.0" layoutY="18.0" text="Name:" />
+      <Label layoutX="43.0" layoutY="51.0" text="Price:" />
+      <Label layoutX="6.0" layoutY="118.0" text="Manufacturer:" />
+      <Label layoutX="31.0" layoutY="85.0" text="Category:" />
+   </children>
+</AnchorPane>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="134.0" prefWidth="205.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.trs2_lab2_desktop.controller.product.FindByManufacturerController">
+   <children>
+      <ComboBox fx:id="manufacturerSelector" layoutX="28.0" layoutY="38.0" prefWidth="150.0" />
+      <Button layoutX="28.0" layoutY="72.0" mnemonicParsing="false" onAction="#findByManufacturer" text="ok" />
+   </children>
+</AnchorPane>

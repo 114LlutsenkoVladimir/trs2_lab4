@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="121.0" prefWidth="212.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.trs2_lab2_desktop.controller.product.FindByPriceController">
+   <children>
+      <TextField fx:id="priceFieldStart" layoutX="50.0" layoutY="14.0" />
+      <TextField fx:id="priceFieldEnd" layoutX="50.0" layoutY="48.0" />
+      <Button layoutX="50.0" layoutY="82.0" mnemonicParsing="false" onAction="#findByPrice" text="ok" />
+      <Label layoutX="11.0" layoutY="52.0" text="to:" />
+      <Label layoutX="11.0" layoutY="18.0" prefHeight="17.0" prefWidth="35.0" text="from:" />
+   </children>
+</AnchorPane>
