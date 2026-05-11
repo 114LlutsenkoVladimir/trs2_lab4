@@ -9,41 +9,42 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 public class DBWorker {
-    static {
-        try {
-            // Для MySQL:
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-        } catch (ClassNotFoundException e) {
-            System.err.println("Драйвер не найден!");
-            e.printStackTrace();
-        }
-    }
+//    static {
+//        try {
+//            // Для MySQL:
+//            Class.forName("com.mysql.cj.jdbc.Driver");
+//
+//        } catch (ClassNotFoundException e) {
+//            System.err.println("Драйвер не найден!");
+//            e.printStackTrace();
+//        }
+//    }
     private static final String URL = "jdbc:mysql://localhost:3306/trs2_lab";
     private static final String USER = "root";
     private static final String PASSWORD = "root";
 
-    public List<ProductManufacturerCategory> fetchAllProducts() {
+    public List<ProductManufacturerCategory> fetchProductsWithCondition(String condition) {
         List<ProductManufacturerCategory> list = new ArrayList<>();
         // Тут логіка підключення до БД як у методичці
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(
-          """
-          SELECT
-           p.id AS product_id,
-           p.name AS product_name,
-           p.price AS product_price,
-           c.id AS category_id,
-           c.name AS category_name,
-           m.id AS man_id,
-           m.name AS man_name
-       FROM product p
-       JOIN category c ON c.id = p.category_id
-       JOIN manufacturer m ON m.id = p.manufacturer_id
-        """)) {
+                     """
+                     SELECT
+                      p.id AS product_id,
+                      p.name AS product_name,
+                      p.price AS product_price,
+                      c.id AS category_id,
+                      c.name AS category_name,
+                      m.id AS man_id,
+                      m.name AS man_name
+                  FROM product p
+                  JOIN category c ON c.id = p.category_id
+                  JOIN manufacturer m ON m.id = p.manufacturer_id
+                   """ + " " + condition)) {
             while (rs.next()) {
                 long productId = rs.getLong("product_id");
                 String productName = rs.getString("product_name");
@@ -63,16 +64,27 @@ public class DBWorker {
         } catch (SQLException e) { e.printStackTrace(); }
         return list;
     }
+    public List<ProductManufacturerCategory> fetchAllProducts() {
+        return fetchProductsWithCondition("");
+    }
 
-    public List<Category> fetchAllCategories() {
+    public List<ProductManufacturerCategory> fetchProductsByCategoryId(Long id) {
+        return fetchProductsWithCondition("where p.category_id = " + id);
+    }
+    public List<ProductManufacturerCategory> fetchProductsByManufacturerId(Long id) {
+        return fetchProductsWithCondition("where p.manufacturer_id = " + id);
+    }
+    public List<ProductManufacturerCategory> fetchProductsByPriceBetween(BigDecimal from, BigDecimal to) {
+        return fetchProductsWithCondition(String.format("WHERE p.price BETWEEN %.2f AND %.2f", from, to));
+    }
+
+    public List<Category> fetchAllCategoriesWithCondition(String condition) {
         List<Category> list = new ArrayList<>();
         // Тут логіка підключення до БД як у методичці
         try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(
-                     """
-                         SELECT * from category
-                     """)) {
+                     "SELECT * from category c" + condition)) {
             while (rs.next()) {
                 long id = rs.getLong("id");
                 String name = rs.getString("name");
@@ -81,6 +93,14 @@ public class DBWorker {
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return list;
+    }
+
+    public List<Category> fetchAllCategories() {
+        return fetchAllCategoriesWithCondition("");
+    }
+
+    public Category findCategoryById(Long id) {
+        return fetchAllCategoriesWithCondition("where c.id = " + id).getFirst();
     }
 
     public List<Manufacturer> fetchAllManufacturers() {

@@ -267,7 +267,6 @@ public class ProductController implements MainController, ShowError {
         table.getItems().setAll(products);
     }
 
-
     private<T> T openAddWindow(String fxmlPath, String title) throws IOException {
         var resource = getClass().getResource(fxmlPath);
         if (resource == null) throw new RuntimeException("FXML не найден: " + fxmlPath);
@@ -299,34 +298,34 @@ public class ProductController implements MainController, ShowError {
     }
 
     public void findByManufacturerWindow() {
-      openDependentWindow("/org/example/trs2_lab2_desktop/find-by-manufacturer-window.fxml",
+      openDependentWindow("/com/example/trs2lab4/find-by-manufacturer-window.fxml",
               "Find by manufacturer");
     }
 
     public void findByManufacturer(Long manufacturerId) {
-//        updateTable(service.findByManufacturerIdDto(manufacturerId));
+         updateTable(remoteService.findByManufacturerId(manufacturerId));
     }
 
     public void findByPriceWindow() {
-        openDependentWindow("/org/example/trs2_lab2_desktop/find-by-price-window.fxml",
+        openDependentWindow("/com/example/trs2lab4/find-by-price-window.fxml",
                 "Find by price");
     }
 
     public void findByPrice(BigDecimal from, BigDecimal to) {
-//        updateTable(service.findByPriceBetweenDto(from, to));
+        updateTable(remoteService.findByPriceBetween(from, to));
     }
 
     public void findByCategoryWindow() {
-        openDependentWindow("/org/example/trs2_lab2_desktop/find-by-category-window.fxml",
+        openDependentWindow("/com/example/trs2lab4/find-by-category-window.fxml",
                 "Find by category");
     }
 
     public void findByCategory(Long categoryId) {
-//        updateTable(service.findByCategoryIdDto(categoryId));
+        updateTable(remoteService.findByCategoryId(categoryId));
     }
 
     public void createProductWindow() {
-        openDependentWindow("/org/example/trs2_lab2_desktop/add-product-window.fxml",
+        openDependentWindow("/com/example/trs2lab4/add-product-window.fxml",
                 "Add product");
     }
 

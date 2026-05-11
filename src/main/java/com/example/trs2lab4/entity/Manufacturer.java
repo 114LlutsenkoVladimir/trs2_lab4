@@ -1,9 +1,10 @@
 package com.example.trs2lab4.entity;
 
+import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class Manufacturer {
+public class Manufacturer implements Serializable  {
     private Long id;
 
     private String name;

@@ -22,9 +22,10 @@
                         <VBox prefHeight="276.0" prefWidth="130.0">
                             <children>
                                 <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="132.0" text="Add" />
-                                <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="135.0" text="Find by Category" />
-                                <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="137.0" text="Find by Manufacturer" />
-                                <Button mnemonicParsing="false" onAction="#findAll" prefHeight="25.0" prefWidth="138.0" text="Find By Price" />
+                                <Button mnemonicParsing="false" onAction="#findByCategoryWindow" prefHeight="25.0" prefWidth="135.0" text="Find by Category" />
+                                <Button mnemonicParsing="false" onAction="#findByManufacturerWindow" prefHeight="25.0" prefWidth="137.0" text="Find by Manufacturer" />
+                                <Button mnemonicParsing="false" onAction="#findByPriceWindow" prefHeight="25.0" prefWidth="138.0" text="Find By Price" />
+                        <Button mnemonicParsing="false" onAction="#findAll" prefHeight="25.0" prefWidth="134.0" text="Find all" />
                             </children>
                         </VBox>
                         <VBox prefHeight="426.0" prefWidth="443.0">

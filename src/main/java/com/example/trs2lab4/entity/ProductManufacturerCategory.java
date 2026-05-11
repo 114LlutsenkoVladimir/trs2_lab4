@@ -1,8 +1,9 @@
 package com.example.trs2lab4.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class ProductManufacturerCategory {
+public class ProductManufacturerCategory implements Serializable {
     private Long id;
     private String name;
     private BigDecimal price;
