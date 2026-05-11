@@ -2,12 +2,11 @@ package com.example.trs2lab4.controller.product;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
-import org.example.trs2_lab2_desktop.controller.MainControllerAware;
-import org.example.trs2_lab2_desktop.entity.Manufacturer;
-import org.example.trs2_lab2_desktop.service.ManufacturerService;
-import org.springframework.stereotype.Component;
+import com.example.trs2lab4.controller.MainControllerAware;
+import com.example.trs2lab4.entity.Manufacturer;
+import com.example.trs2lab4.service.ManufacturerService;
 
-@Component
+
 public class FindByManufacturerController implements MainControllerAware<ProductController> {
 
     public FindByManufacturerController(ManufacturerService service) {
@@ -25,9 +24,9 @@ public class FindByManufacturerController implements MainControllerAware<Product
     @FXML
     public void initialize() {
         manufacturerSelector.getItems().addAll(service.findAll());
-        manufacturerSelector.setValue(service.findById(1L).orElseThrow(
-                () -> new RuntimeException("Manufacturer did not found")
-        ));
+//        manufacturerSelector.setValue(service.findById(1L).orElseThrow(
+//                () -> new RuntimeException("Manufacturer did not found")
+//        ));
     }
 
     public void findByManufacturer() {

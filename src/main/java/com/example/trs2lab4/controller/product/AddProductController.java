@@ -1,5 +1,6 @@
 package com.example.trs2lab4.controller.product;
 
+import com.example.trs2lab4.entity.ProductManufacturerCategory;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -7,7 +8,7 @@ import com.example.trs2lab4.controller.MainControllerAware;
 import com.example.trs2lab4.controller.ShowError;
 import com.example.trs2lab4.entity.Category;
 import com.example.trs2lab4.entity.Manufacturer;
-import com.example.trs2lab4.entity.Product;
+import com.example.trs2lab4.entity.ProductManufacturerCategory;
 import com.example.trs2lab4.service.CategoryService;
 import com.example.trs2lab4.service.ManufacturerService;
 
@@ -48,37 +49,37 @@ public class AddProductController implements MainControllerAware<ProductControll
 
     public void initialize() {
         categorySelector.getItems().addAll(categoryService.findAll());
-        categorySelector.setValue(categoryService.findById(1L).orElseThrow(
-                () -> new RuntimeException("Category did not found")
-        ));
-
-        manufacturerSelector.getItems().addAll(manufacturerService.findAll());
-        manufacturerSelector.setValue(manufacturerService.findById(1L).orElseThrow(
-                () -> new RuntimeException("Manufacturer did not found")
-        ));
+//        categorySelector.setValue(categoryService.findById(1L).orElseThrow(
+//                () -> new RuntimeException("Category did not found")
+//        ));
+//
+//        manufacturerSelector.getItems().addAll(manufacturerService.findAll());
+//        manufacturerSelector.setValue(manufacturerService.findById(1L).orElseThrow(
+//                () -> new RuntimeException("Manufacturer did not found")
+//        ));
     }
 
-
-    public void addProduct() {
-        if (mainController == null)
-            System.out.println("MAIN CONTROLLER IS NULL");
-        try {
-            validate();
-            Product product = new Product(
-                    nameField.getText(),
-                    new BigDecimal(priceField.getText()),
-                    categorySelector.getValue(),
-                    manufacturerSelector.getValue()
-            );
-            mainController.addProduct(product);
-            nameField.setText("");
-            priceField.setText("");
-        } catch (RuntimeException e) {
-            showError(e.getMessage());
-        }
-
-
-    }
+//
+//    public void addProduct() {
+//        if (mainController == null)
+//            System.out.println("MAIN CONTROLLER IS NULL");
+//        try {
+//            validate();
+//            ProductManufacturerCategory product = new ProductManufacturerCategory(
+//                    nameField.getText(),
+//                    new BigDecimal(priceField.getText()),
+//                    categorySelector.getValue(),
+//                    manufacturerSelector.getValue()
+//            );
+//            mainController.addProduct(product);
+//            nameField.setText("");
+//            priceField.setText("");
+//        } catch (RuntimeException e) {
+//            showError(e.getMessage());
+//        }
+//
+//
+//    }
 
     private void validate() {
         if(nameField.getText().isEmpty())

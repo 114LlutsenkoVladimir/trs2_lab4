@@ -2,15 +2,13 @@ package com.example.trs2lab4.controller.product;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
-import org.example.trs2_lab2_desktop.controller.MainControllerAware;
-import org.example.trs2_lab2_desktop.entity.Category;
-import org.example.trs2_lab2_desktop.service.CategoryService;
-import org.springframework.stereotype.Component;
+import com.example.trs2lab4.controller.MainControllerAware;
+import com.example.trs2lab4.entity.Category;
+import com.example.trs2lab4.service.CategoryService;
 
-@Component
 public class FindByCategoryController implements MainControllerAware<ProductController> {
 
-    private ProductController mainController;
+    private ProductController mainController = new ProductController();
 
     private CategoryService categoryService;
 
@@ -24,9 +22,9 @@ public class FindByCategoryController implements MainControllerAware<ProductCont
     @FXML
     public void initialize() {
         categorySelector.getItems().addAll(categoryService.findAll());
-        categorySelector.setValue(categoryService.findById(1L).orElseThrow(
-                () -> new RuntimeException("category did not found")
-        ));
+//        categorySelector.setValue(categoryService.findById(1L).orElseThrow(
+//                () -> new RuntimeException("category did not found")
+//        ));
     }
 
     public void findByCategory() {

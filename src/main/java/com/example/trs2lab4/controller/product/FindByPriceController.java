@@ -2,13 +2,13 @@ package com.example.trs2lab4.controller.product;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
-import org.example.trs2_lab2_desktop.controller.MainControllerAware;
-import org.example.trs2_lab2_desktop.controller.ShowError;
-import org.springframework.stereotype.Component;
+import com.example.trs2lab4.controller.MainControllerAware;
+import com.example.trs2lab4.controller.ShowError;
+
 
 import java.math.BigDecimal;
 
-@Component
+
 public class FindByPriceController implements MainControllerAware<ProductController>, ShowError {
 
     private ProductController mainController;

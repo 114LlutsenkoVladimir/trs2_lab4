@@ -1,5 +1,6 @@
 package com.example.trs2lab4.controller.product;
 
+import com.example.trs2lab4.dbWorker.QueryRequest;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,87 +11,64 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import org.example.trs2_lab2_desktop.controller.MainController;
-import org.example.trs2_lab2_desktop.controller.MainControllerAware;
-import org.example.trs2_lab2_desktop.controller.ShowError;
-import org.example.trs2_lab2_desktop.dbType.DbSelectionContext;
-import org.example.trs2_lab2_desktop.dbType.DbType;
-import org.example.trs2_lab2_desktop.dto.ProductManufacturerCategory;
-import org.example.trs2_lab2_desktop.entity.Category;
-import org.example.trs2_lab2_desktop.entity.Manufacturer;
-import org.example.trs2_lab2_desktop.entity.Product;
-import org.example.trs2_lab2_desktop.service.CategoryService;
-import org.example.trs2_lab2_desktop.service.ManufacturerService;
-import org.example.trs2_lab2_desktop.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
+import com.example.trs2lab4.controller.MainController;
+import com.example.trs2lab4.controller.MainControllerAware;
+import com.example.trs2lab4.controller.ShowError;
+import com.example.trs2lab4.entity.ProductManufacturerCategory;
+import com.example.trs2lab4.entity.Category;
+import com.example.trs2lab4.entity.Manufacturer;
+import com.example.trs2lab4.service.CategoryService;
+import com.example.trs2lab4.service.ManufacturerService;
+import com.example.trs2lab4.service.ProductService;
+
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
 import java.util.List;
 
-@Component
+
 public class ProductController implements MainController, ShowError {
 
-    private ProductService service;
-    private CategoryService categoryService;
-    private ManufacturerService manufacturerService;
-    private DbSelectionContext context;
+    private ProductService service = new ProductService();
+    private CategoryService categoryService = new CategoryService();
+    private ManufacturerService manufacturerService = new ManufacturerService();
 
-    @Autowired
-    private ApplicationContext applicationContext; // Spring Context
+    private QueryRequest remoteService;
 
-    public ProductController(ProductService service,
-                             CategoryService categoryService,
-                             ManufacturerService manufacturerService,
-                             DbSelectionContext context) {
-        this.service = service;
-        this.categoryService = categoryService;
-        this.manufacturerService = manufacturerService;
-        this.context = context;
+ // Spring Context
+
+
+    public ProductController() {
     }
 
     //====================MySql Table===========================
     @FXML
-    private TableView<ProductManufacturerCategory> mySqlProductsTable;
+    private TableView<ProductManufacturerCategory> table;
     @FXML
-    private TableColumn<ProductManufacturerCategory, Long> idColumnMySql;
+    private TableColumn<ProductManufacturerCategory, Long> idColumn;
     @FXML
-    private TableColumn<ProductManufacturerCategory, String> nameColumnMySql;
+    private TableColumn<ProductManufacturerCategory, String> nameColumn;
     @FXML
-    private TableColumn<ProductManufacturerCategory, String> priceColumnMySql;
+    private TableColumn<ProductManufacturerCategory, String> priceColumn;
     @FXML
-    private TableColumn<ProductManufacturerCategory, Category> categoryColumnMySql;
+    private TableColumn<ProductManufacturerCategory, Category> categoryColumn;
     @FXML
-    private TableColumn<ProductManufacturerCategory, Manufacturer> manufacturerColumnMySql;
+    private TableColumn<ProductManufacturerCategory, Manufacturer> manufacturerColumn;
     @FXML
-    private TableColumn<ProductManufacturerCategory, Void> actionColumnMySql;
+    private TableColumn<ProductManufacturerCategory, Void> actionColumn;
     //====================MySql Table===========================
-
-
-    //====================PostgreSql Table===========================
-    @FXML
-    private TableView<ProductManufacturerCategory> postgresqlProducts;
-    @FXML
-    private TableColumn<ProductManufacturerCategory, Long> idColumnPostgresql;
-    @FXML
-    private TableColumn<ProductManufacturerCategory, String> nameColumnPostgresql;
-    @FXML
-    private TableColumn<ProductManufacturerCategory, String> priceColumnPostgresql;
-    @FXML
-    private TableColumn<ProductManufacturerCategory, Category> categoryColumnPostgresql;
-    @FXML
-    private TableColumn<ProductManufacturerCategory, Manufacturer> manufacturerColumnPostgresql;
-    @FXML
-    private TableColumn<ProductManufacturerCategory, Void> actionColumnPostgresql;
-    //====================PostgreSql Table===========================
 
 
     @FXML
     public void initialize() {
         initMysqlTable();
-        initPostgresqlTable();
+        try {
+            remoteService = (QueryRequest) Naming.lookup("//localhost/Query");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void initMysqlTable() {
@@ -101,12 +79,12 @@ public class ProductController implements MainController, ShowError {
         // =====================
         // ID
         // =====================
-        idColumnMySql.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getId()));
+        idColumn.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getId()));
 
         // =====================
         // NAME (TextField)
         // =====================
-        nameColumnMySql.setCellFactory(col -> new TableCell<>() {
+        nameColumn.setCellFactory(col -> new TableCell<>() {
             private final TextField textField = new TextField();
             {
                 // Слушатель изменений текста: записываем в объект при каждом вводе
@@ -131,7 +109,7 @@ public class ProductController implements MainController, ShowError {
         // =====================
         // PRICE (TextField)
         // =====================
-        priceColumnMySql.setCellFactory(col -> new TableCell<>() {
+        priceColumn.setCellFactory(col -> new TableCell<>() {
             private final TextField textField = new TextField();
             {
                 textField.textProperty().addListener((obs, oldVal, newVal) -> {
@@ -162,7 +140,7 @@ public class ProductController implements MainController, ShowError {
         // =====================
         // CATEGORY (ComboBox)
         // =====================
-        categoryColumnMySql.setCellFactory(col -> new TableCell<>() {
+        categoryColumn.setCellFactory(col -> new TableCell<>() {
             private final ComboBox<Category> comboBox = new ComboBox<>(allCategories);
             {
                 // Красивое отображение имени категории в списке
@@ -203,7 +181,7 @@ public class ProductController implements MainController, ShowError {
         // =====================
         // MANUFACTURER (ComboBox)
         // =====================
-        manufacturerColumnMySql.setCellFactory(col -> new TableCell<>() {
+        manufacturerColumn.setCellFactory(col -> new TableCell<>() {
             private final ComboBox<Manufacturer> comboBox = new ComboBox<>(allManufacturers);
             {
                 comboBox.setCellFactory(cb -> new ListCell<>() {
@@ -242,7 +220,7 @@ public class ProductController implements MainController, ShowError {
         // =====================
         // ACTION (Кнопка Update)
         // =====================
-        actionColumnMySql.setCellFactory(col -> new TableCell<>() {
+        actionColumn.setCellFactory(col -> new TableCell<>() {
             private final Button updateBtn = new Button("Update");
             private final Button deleteBtn = new Button("Delete");
             private final HBox container = new HBox(10, updateBtn, deleteBtn); // 10 - отступ между кнопками
@@ -284,205 +262,17 @@ public class ProductController implements MainController, ShowError {
 
     }
 
-    public void initPostgresqlTable() {
-        // 1. Предварительная загрузка списков
-        ObservableList<Category> allCategories = FXCollections.observableArrayList(categoryService.findAll());
-        ObservableList<Manufacturer> allManufacturers = FXCollections.observableArrayList(manufacturerService.findAll());
 
-        // =====================
-        // ID
-        // =====================
-        idColumnPostgresql.setCellValueFactory(cell -> new SimpleObjectProperty<>(cell.getValue().getId()));
-
-        // =====================
-        // NAME (TextField)
-        // =====================
-        nameColumnPostgresql.setCellFactory(col -> new TableCell<>() {
-            private final TextField textField = new TextField();
-            {
-                textField.textProperty().addListener((obs, oldVal, newVal) -> {
-                    ProductManufacturerCategory product = getTableRow().getItem();
-                    if (product != null) product.setName(newVal);
-                });
-            }
-
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
-                    setGraphic(null);
-                } else {
-                    textField.setText(getTableRow().getItem().getName());
-                    setGraphic(textField);
-                }
-            }
-        });
-
-        // =====================
-        // PRICE (TextField)
-        // =====================
-        priceColumnPostgresql.setCellFactory(col -> new TableCell<>() {
-            private final TextField textField = new TextField();
-            {
-                textField.textProperty().addListener((obs, oldVal, newVal) -> {
-                    ProductManufacturerCategory product = getTableRow().getItem();
-                    if (product != null) {
-                        try {
-                            product.setPrice(new BigDecimal(newVal));
-                        } catch (NumberFormatException ignored) {}
-                    }
-                });
-            }
-
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
-                    setGraphic(null);
-                } else {
-                    BigDecimal price = getTableRow().getItem().getPrice();
-                    textField.setText(price != null ? price.toString() : "");
-                    setGraphic(textField);
-                }
-            }
-        });
-
-        // =====================
-        // CATEGORY (ComboBox)
-        // =====================
-        categoryColumnPostgresql.setCellFactory(col -> new TableCell<>() {
-            private final ComboBox<Category> comboBox = new ComboBox<>(allCategories);
-            {
-                comboBox.setCellFactory(cb -> new ListCell<>() {
-                    @Override protected void updateItem(Category item, boolean empty) {
-                        super.updateItem(item, empty);
-                        setText(empty || item == null ? null : item.getName());
-                    }
-                });
-                comboBox.setButtonCell(comboBox.getCellFactory().call(null));
-
-                comboBox.setOnAction(e -> {
-                    ProductManufacturerCategory product = getTableRow().getItem();
-                    if (product != null && comboBox.getValue() != null) {
-                        product.setCategoryId(comboBox.getValue().getId());
-                    }
-                });
-            }
-
-            @Override
-            protected void updateItem(Category item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
-                    setGraphic(null);
-                } else {
-                    ProductManufacturerCategory product = getTableRow().getItem();
-                    allCategories.stream()
-                            .filter(c -> c.getId().equals(product.getCategoryId()))
-                            .findFirst()
-                            .ifPresent(comboBox::setValue);
-                    setGraphic(comboBox);
-                }
-            }
-        });
-
-        // =====================
-        // MANUFACTURER (ComboBox)
-        // =====================
-        manufacturerColumnPostgresql.setCellFactory(col -> new TableCell<>() {
-            private final ComboBox<Manufacturer> comboBox = new ComboBox<>(allManufacturers);
-            {
-                comboBox.setCellFactory(cb -> new ListCell<>() {
-                    @Override protected void updateItem(Manufacturer item, boolean empty) {
-                        super.updateItem(item, empty);
-                        setText(empty || item == null ? null : item.getName());
-                    }
-                });
-                comboBox.setButtonCell(comboBox.getCellFactory().call(null));
-
-                comboBox.setOnAction(e -> {
-                    ProductManufacturerCategory product = getTableRow().getItem();
-                    if (product != null && comboBox.getValue() != null) {
-                        product.setManufacturerId(comboBox.getValue().getId());
-                    }
-                });
-            }
-
-            @Override
-            protected void updateItem(Manufacturer item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
-                    setGraphic(null);
-                } else {
-                    ProductManufacturerCategory product = getTableRow().getItem();
-                    allManufacturers.stream()
-                            .filter(m -> m.getId().equals(product.getManufacturerId()))
-                            .findFirst()
-                            .ifPresent(comboBox::setValue);
-                    setGraphic(comboBox);
-                }
-            }
-        });
-
-        // =====================
-        // ACTION (Кнопки Update/Delete)
-        // =====================
-        actionColumnPostgresql.setCellFactory(col -> new TableCell<>() {
-            private final Button updateBtn = new Button("Update");
-            private final Button deleteBtn = new Button("Delete");
-            private final HBox container = new HBox(10, updateBtn, deleteBtn);
-
-            {
-                updateBtn.setOnAction(event -> {
-                    ProductManufacturerCategory product = getTableRow().getItem();
-                    if (product != null) updateProduct(product);
-                });
-
-                deleteBtn.setOnAction(event -> {
-                    ProductManufacturerCategory product = getTableRow().getItem();
-                    if (product != null) {
-                        deleteProduct(product.getId());
-                        getTableView().getItems().remove(product);
-                    }
-                });
-                container.setAlignment(javafx.geometry.Pos.CENTER);
-            }
-
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(container);
-                }
-            }
-        });
+    public void updateTable(List<ProductManufacturerCategory> products) {
+        table.getItems().setAll(products);
     }
 
-    public void updateRelevantTable(List<ProductManufacturerCategory> products) {
-        if(context.getCurrentDbType() == DbType.MY_SQL) {
-            mySqlProductsTable.getItems().setAll(products);
-            postgresqlProducts.getItems().clear();
-        }
-        else {
-            postgresqlProducts.getItems().setAll(products);
-            mySqlProductsTable.getItems().clear();
-        }
-    }
-
-    public void updateBothTables() {
-        mySqlProductsTable.getItems().addAll(service.findAllDto(DbType.MY_SQL));
-        postgresqlProducts.getItems().addAll(service.findAllDto(DbType.POSTGRES));
-    }
 
     private<T> T openAddWindow(String fxmlPath, String title) throws IOException {
         var resource = getClass().getResource(fxmlPath);
         if (resource == null) throw new RuntimeException("FXML не найден: " + fxmlPath);
 
         FXMLLoader loader = new FXMLLoader(resource);
-
-        // КЛЮЧЕВАЯ СТРОКА: говорим лоадеру просить контроллеры у Spring
-        loader.setControllerFactory(applicationContext::getBean);
 
         Parent root = loader.load();
 
@@ -504,8 +294,8 @@ public class ProductController implements MainController, ShowError {
         }
     }
 
-    public void findAll() {
-        updateRelevantTable(service.findAllDto());
+    public void findAll() throws RemoteException {
+        updateTable(remoteService.findAll());
     }
 
     public void findByManufacturerWindow() {
@@ -514,7 +304,7 @@ public class ProductController implements MainController, ShowError {
     }
 
     public void findByManufacturer(Long manufacturerId) {
-        updateRelevantTable(service.findByManufacturerIdDto(manufacturerId));
+//        updateTable(service.findByManufacturerIdDto(manufacturerId));
     }
 
     public void findByPriceWindow() {
@@ -523,7 +313,7 @@ public class ProductController implements MainController, ShowError {
     }
 
     public void findByPrice(BigDecimal from, BigDecimal to) {
-        updateRelevantTable(service.findByPriceBetweenDto(from, to));
+//        updateTable(service.findByPriceBetweenDto(from, to));
     }
 
     public void findByCategoryWindow() {
@@ -532,7 +322,7 @@ public class ProductController implements MainController, ShowError {
     }
 
     public void findByCategory(Long categoryId) {
-        updateRelevantTable(service.findByCategoryIdDto(categoryId));
+//        updateTable(service.findByCategoryIdDto(categoryId));
     }
 
     public void createProductWindow() {
@@ -540,32 +330,19 @@ public class ProductController implements MainController, ShowError {
                 "Add product");
     }
 
-    public void addProduct(Product product) {
-        service.create(product);
-        findAll();
+    public void addProduct(ProductManufacturerCategory product) {
+//        service.create(product);
+//        findAll();
     }
 
     public void updateProduct(ProductManufacturerCategory product) {
-        service.updateByDto(product);
-        findAll();
+//        service.updateByDto(product);
+//        findAll();
     }
 
     public void deleteProduct(Long id) {
-        service.delete(id);
-        findAll();
+//        service.delete(id);
+//        findAll();
     }
 
-    public void dbSelectionWindow() {
-        try {
-            openAddWindow("/org/example/trs2_lab2_desktop/select-db.fxml",
-                    "Db selection");
-        } catch (IOException e) {
-            showError(e.getMessage());
-        }
-    }
-
-    public void transactionWindow() {
-        openDependentWindow("/org/example/trs2_lab2_desktop/transaction.fxml",
-                "Transaction");
-    }
 }
