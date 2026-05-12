@@ -26,6 +26,16 @@ public class ProductManufacturerCategory implements Serializable {
         this.manufacturerName = manufacturerName;
     }
 
+    public ProductManufacturerCategory(String name,
+                                       BigDecimal price,
+                                       Long categoryId,
+                                       Long manufacturerId) {
+        this.name = name;
+        this.price = price;
+        this.categoryId = categoryId;
+        this.manufacturerId = manufacturerId;
+    }
+
     public Long getId() {
         return id;
     }
@@ -76,5 +86,10 @@ public class ProductManufacturerCategory implements Serializable {
 
     public void setManufacturerName(String manufacturerName) {
         this.manufacturerName = manufacturerName;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

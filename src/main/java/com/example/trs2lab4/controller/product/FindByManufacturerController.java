@@ -1,5 +1,6 @@
 package com.example.trs2lab4.controller.product;
 
+import com.example.trs2lab4.controller.ShowError;
 import com.example.trs2lab4.dbWorker.QueryRequest;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -7,8 +8,11 @@ import com.example.trs2lab4.controller.MainControllerAware;
 import com.example.trs2lab4.entity.Manufacturer;
 import com.example.trs2lab4.service.ManufacturerService;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
-public class FindByManufacturerController implements MainControllerAware<ProductController> {
+
+public class FindByManufacturerController implements MainControllerAware<ProductController>, ShowError {
 
     public FindByManufacturerController() {}
 
@@ -21,10 +25,6 @@ public class FindByManufacturerController implements MainControllerAware<Product
 
     @FXML
     public void initialize() {
-        manufacturerSelector.getItems().addAll(service.);
-//        manufacturerSelector.setValue(service.findById(1L).orElseThrow(
-//                () -> new RuntimeException("Manufacturer did not found")
-//        ));
     }
 
     public void findByManufacturer() {
@@ -41,5 +41,12 @@ public class FindByManufacturerController implements MainControllerAware<Product
     @Override
     public void setRemoteService(QueryRequest service) {
         this.service = service;
+        try {
+            manufacturerSelector.getItems().addAll(service.findAllManufacturers());
+            manufacturerSelector.setValue(service.findManufacturerById(1L));
+        } catch (RemoteException | RuntimeException e) {
+            showError(e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

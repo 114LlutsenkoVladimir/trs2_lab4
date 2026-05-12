@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="190.0" prefWidth="258.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.trs2_lab2_desktop.controller.product.AddProductController">
+<AnchorPane prefHeight="190.0" prefWidth="258.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.trs2lab4.controller.product.AddProductController">
    <children>
       <TextField fx:id="nameField" layoutX="85.0" layoutY="14.0" />
       <TextField fx:id="priceField" layoutX="85.0" layoutY="47.0" />

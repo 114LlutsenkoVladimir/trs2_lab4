@@ -25,13 +25,13 @@ import com.example.trs2lab4.service.ProductService;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.rmi.Naming;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
 
 public class ProductController implements MainController, ShowError {
 
-    private ProductService service = new ProductService();
     private CategoryService categoryService = new CategoryService();
     private ManufacturerService manufacturerService = new ManufacturerService();
 
@@ -288,8 +288,10 @@ public class ProductController implements MainController, ShowError {
             // Установка главного контроллера
             MainControllerAware<ProductController> controller = openAddWindow(fxmlPath, title);
             controller.setMainController(this);
+            controller.setRemoteService(remoteService);
         } catch (IOException e) {
-            showError(e.getMessage());
+            System.err.println("CRITICAL ERROR LOADING FXML:");
+            e.printStackTrace();
         }
     }
 
@@ -303,7 +305,11 @@ public class ProductController implements MainController, ShowError {
     }
 
     public void findByManufacturer(Long manufacturerId) {
-         updateTable(remoteService.findByManufacturerId(manufacturerId));
+         try {
+             updateTable(remoteService.findByManufacturerId(manufacturerId));
+         } catch (RemoteException e) {
+             showError("remote exception");
+         }
     }
 
     public void findByPriceWindow() {
@@ -312,7 +318,11 @@ public class ProductController implements MainController, ShowError {
     }
 
     public void findByPrice(BigDecimal from, BigDecimal to) {
-        updateTable(remoteService.findByPriceBetween(from, to));
+        try {
+            updateTable(remoteService.findByPriceBetween(from, to));
+        } catch (RemoteException e) {
+            showError("remote exception");
+        }
     }
 
     public void findByCategoryWindow() {
@@ -321,27 +331,42 @@ public class ProductController implements MainController, ShowError {
     }
 
     public void findByCategory(Long categoryId) {
-        updateTable(remoteService.findByCategoryId(categoryId));
+        try{
+            updateTable(remoteService.findByCategoryId(categoryId));
+        } catch (RemoteException e) {
+            showError("remote exception");
+        }
     }
 
-    public void createProductWindow() {
+    public void addProductWindow() {
         openDependentWindow("/com/example/trs2lab4/add-product-window.fxml",
                 "Add product");
     }
 
     public void addProduct(ProductManufacturerCategory product) {
-//        service.create(product);
-//        findAll();
+        try {
+            remoteService.addProduct(product);
+        } catch (RemoteException e) {
+            showError(e.getMessage());
+        }
+
     }
 
     public void updateProduct(ProductManufacturerCategory product) {
-//        service.updateByDto(product);
-//        findAll();
+        try {
+            remoteService.updateProduct(product);
+        } catch (RemoteException e) {
+            showError(e.getMessage());
+        }
     }
 
     public void deleteProduct(Long id) {
-//        service.delete(id);
-//        findAll();
+        try {
+            remoteService.deleteProduct(id);
+            findAll();
+        } catch (RemoteException e) {
+            showError(e.getMessage());
+        }
     }
 
 }

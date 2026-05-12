@@ -6,7 +6,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="298.0" prefWidth="589.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.trs2lab4.controller.product.ProductController">
     <children>
-        <VBox layoutX="52.0" layoutY="51.0" prefHeight="497.0" prefWidth="573.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <VBox layoutX="52.0" layoutY="51.0" prefHeight="497.0" prefWidth="873.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <ToolBar prefHeight="40.0" prefWidth="484.0">
                     <items>
@@ -21,14 +21,14 @@
                     <children>
                         <VBox prefHeight="276.0" prefWidth="130.0">
                             <children>
-                                <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="132.0" text="Add" />
+                                <Button mnemonicParsing="false" onAction="#addProductWindow" prefHeight="25.0" prefWidth="132.0" text="Add" />
                                 <Button mnemonicParsing="false" onAction="#findByCategoryWindow" prefHeight="25.0" prefWidth="135.0" text="Find by Category" />
                                 <Button mnemonicParsing="false" onAction="#findByManufacturerWindow" prefHeight="25.0" prefWidth="137.0" text="Find by Manufacturer" />
                                 <Button mnemonicParsing="false" onAction="#findByPriceWindow" prefHeight="25.0" prefWidth="138.0" text="Find By Price" />
                         <Button mnemonicParsing="false" onAction="#findAll" prefHeight="25.0" prefWidth="134.0" text="Find all" />
                             </children>
                         </VBox>
-                        <VBox prefHeight="426.0" prefWidth="443.0">
+                        <VBox prefHeight="426.0" prefWidth="543.0">
                             <children>
                                 <Label prefHeight="38.0" prefWidth="451.0" text="Products" textAlignment="CENTER">
                                     <font>

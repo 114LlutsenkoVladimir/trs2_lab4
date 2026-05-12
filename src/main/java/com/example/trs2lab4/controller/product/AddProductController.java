@@ -1,5 +1,6 @@
 package com.example.trs2lab4.controller.product;
 
+import com.example.trs2lab4.dbWorker.QueryRequest;
 import com.example.trs2lab4.entity.ProductManufacturerCategory;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -13,22 +14,17 @@ import com.example.trs2lab4.service.CategoryService;
 import com.example.trs2lab4.service.ManufacturerService;
 
 import java.math.BigDecimal;
+import java.rmi.RemoteException;
 
 
 public class AddProductController implements MainControllerAware<ProductController>, ShowError {
 
     private ProductController mainController;
 
-    private CategoryService categoryService;
+    private QueryRequest remoteService;
 
-    private ManufacturerService manufacturerService;
-
-    public AddProductController(CategoryService categoryService,
-                                ManufacturerService manufacturerService) {
-        this.categoryService = categoryService;
-        this.manufacturerService = manufacturerService;
+    public AddProductController() {
     }
-
 
     @FXML
     private TextField nameField;
@@ -47,39 +43,43 @@ public class AddProductController implements MainControllerAware<ProductControll
         this.mainController = mainController;
     }
 
-    public void initialize() {
-        categorySelector.getItems().addAll(categoryService.findAll());
-//        categorySelector.setValue(categoryService.findById(1L).orElseThrow(
-//                () -> new RuntimeException("Category did not found")
-//        ));
-//
-//        manufacturerSelector.getItems().addAll(manufacturerService.findAll());
-//        manufacturerSelector.setValue(manufacturerService.findById(1L).orElseThrow(
-//                () -> new RuntimeException("Manufacturer did not found")
-//        ));
+    @Override
+    public void setRemoteService(QueryRequest service) {
+        this.remoteService = service;
+        try {
+            categorySelector.getItems().addAll(remoteService.findAllCategories());
+            categorySelector.setValue(remoteService.findCategoryById(1L));
+
+            manufacturerSelector.getItems().addAll(remoteService.findAllManufacturers());
+            manufacturerSelector.setValue(remoteService.findManufacturerById(1L));
+        } catch (RuntimeException | RemoteException e) {
+            showError(e.getMessage());
+        }
     }
 
-//
-//    public void addProduct() {
-//        if (mainController == null)
-//            System.out.println("MAIN CONTROLLER IS NULL");
-//        try {
-//            validate();
-//            ProductManufacturerCategory product = new ProductManufacturerCategory(
-//                    nameField.getText(),
-//                    new BigDecimal(priceField.getText()),
-//                    categorySelector.getValue(),
-//                    manufacturerSelector.getValue()
-//            );
-//            mainController.addProduct(product);
-//            nameField.setText("");
-//            priceField.setText("");
-//        } catch (RuntimeException e) {
-//            showError(e.getMessage());
-//        }
-//
-//
-//    }
+    public void initialize() {
+
+    }
+
+    public void addProduct() {
+        if (mainController == null)
+            System.out.println("MAIN CONTROLLER IS NULL");
+        try {
+            validate();
+            ProductManufacturerCategory product = new ProductManufacturerCategory(
+                    nameField.getText(),
+                    new BigDecimal(priceField.getText()),
+                    categorySelector.getValue().getId(),
+                    manufacturerSelector.getValue().getId()
+            );
+            mainController.addProduct(product);
+            nameField.setText("");
+            priceField.setText("");
+        } catch (RuntimeException e) {
+            showError(e.getMessage());
+        }
+
+    }
 
     private void validate() {
         if(nameField.getText().isEmpty())

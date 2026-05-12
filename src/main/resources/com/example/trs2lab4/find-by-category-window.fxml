@@ -3,9 +3,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="116.0" prefWidth="208.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.trs2_lab2_desktop.controller.product.FindByCategoryController">
+<AnchorPane prefHeight="116.0" prefWidth="208.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.trs2lab4.controller.product.FindByCategoryController">
    <children>
       <ComboBox fx:id="categorySelector" layoutX="25.0" layoutY="26.0" prefWidth="150.0" />
-      <Button fx:id="findByCategory" layoutX="25.0" layoutY="66.0" mnemonicParsing="false" onAction="#findByCategory" text="ok" />
+      <Button layoutX="25.0" layoutY="66.0" mnemonicParsing="false" onAction="#findByCategory" text="ok" />
    </children>
 </AnchorPane>
